@@ -1,0 +1,31 @@
+
+```{mermaid}
+flowchart TD
+
+ST_INCOMING[(ST incoming)]
+ST_INGEST[ST ingest]
+ST_DATA[(ST data)]
+ST_DATA_SERVER[ST data server]
+ST_WEB[ST web app]
+
+OPS_JENKINS[Ops Jenkins]
+
+SSP_PROC[Snow Surface Properties processing]
+SWE_PROC[Snow Water Equivalent processing]
+
+
+
+SSP_PROC -->|push| ST_INCOMING
+SWE_PROC -->|push| ST_INCOMING
+
+subgraph NSIDC_SYSTEM[NSIDC systems]
+  ST_INCOMING -->|read| ST_INGEST
+  ST_INGEST -->|write JSON| ST_DATA
+  ST_DATA_SERVER -->|read JSON| ST_DATA
+  ST_WEB -->|HTTP GET| ST_DATA_SERVER
+
+  OPS_JENKINS -->|trigger| ST_INGEST
+end
+
+style NSIDC_SYSTEM fill:#FFFFFF;
+```
